@@ -119,4 +119,11 @@ Die Tests decken Folgendes ab: Intervalle (inklusive Tageswechsel und Sommerzeit
 
 ## Lizenz
 
-MIT – siehe [LICENSE](LICENSE).
+MIT mit [Commons Clause](https://commonsclause.com) – siehe [LICENSE](LICENSE).
+
+Kurz gesagt:
+
+- **Erlaubt:** mysync nutzen, auch in Ihrer Firma und für kommerzielle Arbeit. Den Code ändern, eigene Versionen bauen und kostenlos weitergeben (mit diesem Lizenzhinweis).
+- **Nicht erlaubt:** mysync verkaufen oder ein kostenpflichtiges Produkt oder einen kostenpflichtigen Dienst anbieten, dessen Wert ganz oder im Wesentlichen aus mysync stammt. Dazu zählen auch bezahlte Hosting-, Beratungs- oder Support-Angebote rund um mysync.
+
+Hinweis: Wegen der Commons Clause ist mysync „source available“, aber keine Open-Source-Software im Sinne der OSI.
