@@ -2,6 +2,8 @@
 
 mysync ist eine kleine macOS-App für das Statusmenü (oben rechts neben der Uhr). Sie synchronisiert Ordner zwischen Ihrem Mac und anderen Computern – ausschließlich mit **rsync über SSH**.
 
+Wie mysync mit einem einzigen Prompt und ein paar Rückfragen entstanden ist, lesen Sie im Artikel [Wie ich einmal mit einem einzigen Prompt eine Mac-App gebaut habe](https://www.fuerstenberg.biz/blog/wie-ich-einmal-mit-einem-prompt-eine-mac-app-gebaut-habe).
+
 ## Funktionen
 
 - **Symbol im Statusmenü** mit kleinem Punkt:
