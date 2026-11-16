@@ -1,0 +1,55 @@
+name: mysync
+options:
+  bundleIdPrefix: biz.fuerstenberg
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  MySyncCore:
+    path: .
+targets:
+  mysync:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+    dependencies:
+      - package: MySyncCore
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: mysync
+        CFBundleName: mysync
+        CFBundleDevelopmentRegion: de
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.utilities
+        NSHumanReadableCopyright: "© 2026 René Fürstenberg"
+        NSLocationUsageDescription: "mysync liest den Namen Ihres WLANs, um zu erkennen, ob Sie im Netzwerk eines Computers sind. Nur dann werden Sie über Ausfälle benachrichtigt."
+        NSLocationWhenInUseUsageDescription: "mysync liest den Namen Ihres WLANs, um zu erkennen, ob Sie im Netzwerk eines Computers sind. Nur dann werden Sie über Ausfälle benachrichtigt."
+    entitlements:
+      path: App/mysync.entitlements
+      properties:
+        com.apple.security.app-sandbox: false
+        com.apple.security.personal-information.location: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: biz.fuerstenberg.mysync
+        PRODUCT_NAME: mysync
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_HARDENED_RUNTIME: true
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+schemes:
+  mysync:
+    build:
+      targets:
+        mysync: all
+    run:
+      config: Debug
