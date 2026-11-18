@@ -77,6 +77,8 @@ public struct SyncJob: Codable, Identifiable, Hashable, Sendable {
     public var schedule: Schedule
     /// Dateien im Ziel löschen, die in der Quelle fehlen (`--delete`).
     public var deleteExtraneous: Bool
+    /// Dateien nach erfolgreicher Übertragung in der Quelle löschen (`--remove-source-files`).
+    public var removeSourceFiles: Bool
     public var excludes: [String]
     public var enabled: Bool
 
@@ -88,6 +90,7 @@ public struct SyncJob: Codable, Identifiable, Hashable, Sendable {
         direction: SyncDirection = .push,
         schedule: Schedule = .hourly,
         deleteExtraneous: Bool = false,
+        removeSourceFiles: Bool = false,
         excludes: [String] = [".DS_Store"],
         enabled: Bool = true
     ) {
@@ -98,8 +101,44 @@ public struct SyncJob: Codable, Identifiable, Hashable, Sendable {
         self.direction = direction
         self.schedule = schedule
         self.deleteExtraneous = deleteExtraneous
+        self.removeSourceFiles = removeSourceFiles
         self.excludes = excludes
         self.enabled = enabled
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id, computerID, localPath, remotePath, direction, schedule
+        case deleteExtraneous, removeSourceFiles, excludes, enabled
+    }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        computerID = try c.decode(UUID.self, forKey: .computerID)
+        localPath = try c.decode(String.self, forKey: .localPath)
+        remotePath = try c.decode(String.self, forKey: .remotePath)
+        direction = try c.decode(SyncDirection.self, forKey: .direction)
+        schedule = try c.decode(Schedule.self, forKey: .schedule)
+        deleteExtraneous = try c.decode(Bool.self, forKey: .deleteExtraneous)
+        // Ältere Konfigurationen kennen dieses Feld noch nicht.
+        removeSourceFiles = try c.decodeIfPresent(Bool.self, forKey: .removeSourceFiles) ?? false
+        excludes = try c.decode([String].self, forKey: .excludes)
+        enabled = try c.decode(Bool.self, forKey: .enabled)
+    }
+
+    /// `--delete` gilt nicht zusammen mit „Übertragen und löschen“.
+    public var effectiveDeleteExtraneous: Bool {
+        deleteExtraneous && !removeSourceFiles
+    }
+
+    /// Pfeil für Menü und Liste; verschiebende Ordner bekommen einen gestrichelten Pfeil.
+    public var arrow: String {
+        switch (direction, removeSourceFiles) {
+        case (.push, false): return "→"
+        case (.pull, false): return "←"
+        case (.push, true): return "⇢"
+        case (.pull, true): return "⇠"
+        }
     }
 
     /// Kurzer Ordnername für das Menü.

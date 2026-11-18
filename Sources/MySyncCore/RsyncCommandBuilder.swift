@@ -58,8 +58,11 @@ public struct RsyncCommandBuilder: Sendable {
     /// Gemeinsame Optionen für jeden Lauf.
     public func baseOptions(for job: SyncJob) -> [String] {
         var args = ["-az", "--partial"]
-        if job.deleteExtraneous {
+        if job.effectiveDeleteExtraneous {
             args.append("--delete")
+        }
+        if job.removeSourceFiles {
+            args.append("--remove-source-files")
         }
         for pattern in job.excludes where !pattern.trimmingCharacters(in: .whitespaces).isEmpty {
             args.append("--exclude=\(pattern)")

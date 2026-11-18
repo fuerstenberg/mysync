@@ -95,4 +95,20 @@ final class RsyncIntegrationTests: XCTestCase {
         XCTAssertTrue(r.succeeded, r.stderr)
         XCTAssertTrue(FileManager.default.fileExists(atPath: source.appendingPathComponent("remote.txt").path))
     }
+
+    func testRemoveSourceFilesMovesFilesButKeepsFolders() async throws {
+        var j = job()
+        j.removeSourceFiles = true
+        let r = try await run(j)
+        XCTAssertTrue(r.succeeded, r.stderr)
+        let fm = FileManager.default
+        XCTAssertEqual(try String(contentsOf: dest.appendingPathComponent("a.txt"), encoding: .utf8), "eins")
+        XCTAssertEqual(try String(contentsOf: dest.appendingPathComponent("unter/b.txt"), encoding: .utf8), "zwei")
+        XCTAssertFalse(fm.fileExists(atPath: source.appendingPathComponent("a.txt").path), "Quelle gelöscht")
+        XCTAssertFalse(fm.fileExists(atPath: source.appendingPathComponent("unter/b.txt").path))
+        var isDir: ObjCBool = false
+        XCTAssertTrue(fm.fileExists(atPath: source.appendingPathComponent("unter").path, isDirectory: &isDir) && isDir.boolValue,
+                      "Ordner bleibt stehen")
+        XCTAssertTrue(fm.fileExists(atPath: source.appendingPathComponent(".DS_Store").path), "Ausgeschlossenes bleibt")
+    }
 }

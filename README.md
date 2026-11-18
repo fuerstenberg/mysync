@@ -16,9 +16,13 @@ Wie mysync mit einem einzigen Prompt und ein paar Rückfragen entstanden ist, le
   - letzte Synchronisierung, z. B. „✓ zuletzt vor 5 Min.“
   - **Klick auf eine Zeile** startet die Synchronisierung sofort.
   - Dazu „Alle jetzt synchronisieren“, „Einstellungen …“ und „Beenden“.
-- **Intervalle**: alle X Minuten, stündlich oder täglich zu einer festen Uhrzeit. Verpasste Läufe (z. B. weil der Mac schlief) werden nachgeholt.
+- **Intervalle**: alle X Minuten, stündlich, täglich zu einer festen Uhrzeit oder nur manuell (per Klick im Menü). Verpasste Läufe (z. B. weil der Mac schlief) werden nachgeholt.
 - **Richtung pro Ordner**: Senden (Mac → Computer) oder Holen (Computer → Mac).
 - **Optionen**: `--delete` (Ziel spiegelt die Quelle exakt) und Ausschlussmuster wie `*.tmp`.
+- **Übertragen und löschen** (`--remove-source-files`): Dateien werden nach der Übertragung in der Quelle gelöscht, z. B. für eine Scannerablage auf einem anderen Computer. Gelöscht wird nur, was vollständig übertragen wurde; Ordner bleiben stehen. Im Menü erkennen Sie solche Ordner am gestrichelten Pfeil (⇠ / ⇢).
+  - Vorsicht: Eine gleichnamige Datei im Ziel wird überschrieben.
+  - Schreibt ein Gerät gerade noch eine Datei in die Quelle, kann eine unvollständige Fassung übertragen werden.
+  - Nicht kombinierbar mit `--delete`.
 - **Intelligente Benachrichtigungen**: Ist ein Computer nicht erreichbar, meldet mysync das **nur, wenn Sie im Netzwerk dieses Computers sind**. Unterwegs mit dem Laptop bleibt es still.
 - **Komfortable Einrichtung**: Ordnerauswahl per Dialog, „Aktuelles WLAN übernehmen“, „Aktuelles Subnetz übernehmen“, „Verbindung testen“ und eine Vorschau des rsync-Aufrufs.
 - **Beim Anmelden starten** (optional).

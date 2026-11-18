@@ -178,7 +178,7 @@ enum MenuRowFormatter {
         let result = NSMutableAttributedString()
         let primary = job.enabled ? NSColor.labelColor : NSColor.tertiaryLabelColor
         result.append(NSAttributedString(
-            string: "\(computer.displayName) \(job.direction.arrow) \(job.folderName)",
+            string: "\(computer.displayName) \(job.arrow) \(job.folderName)",
             attributes: [.font: NSFont.menuFont(ofSize: 13), .foregroundColor: primary, .paragraphStyle: paragraph]
         ))
         let interval = job.enabled ? job.schedule.description : "pausiert"

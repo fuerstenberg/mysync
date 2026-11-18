@@ -157,7 +157,7 @@ struct JobEditor: View {
             _minutes = State(initialValue: m)
         case .daily(let h, let m):
             _dailyTime = State(initialValue: Calendar.current.date(from: DateComponents(hour: h, minute: m)) ?? Date())
-        case .hourly:
+        case .hourly, .manual:
             break
         }
     }
@@ -205,6 +205,9 @@ struct JobEditor: View {
                         EmptyView()
                     case .daily:
                         DatePicker("Uhrzeit", selection: $dailyTime, displayedComponents: .hourAndMinute)
+                    case .manual:
+                        Text("Läuft nur per Klick im Menü.")
+                            .font(.caption).foregroundStyle(.secondary)
                     }
                     Text("Anzeige im Menü: \(schedule.description)")
                         .font(.caption).foregroundStyle(.secondary)
@@ -212,8 +215,22 @@ struct JobEditor: View {
 
                 Section("Optionen") {
                     Toggle("Aktiv", isOn: $draft.enabled)
-                    Toggle("Im Ziel löschen, was in der Quelle fehlt (--delete)", isOn: $draft.deleteExtraneous)
-                    if draft.deleteExtraneous {
+                    Toggle(isOn: $draft.removeSourceFiles) {
+                        Text(draft.direction == .pull
+                             ? "Nach dem Übertragen auf dem Computer löschen (verschieben)"
+                             : "Nach dem Übertragen auf dem Mac löschen (verschieben)")
+                    }
+                    if draft.removeSourceFiles {
+                        Label("Vorsicht: Dateien werden in der Quelle gelöscht, sobald sie übertragen sind. Gleichnamige Dateien im Ziel werden überschrieben. Ordner bleiben stehen.",
+                              systemImage: "exclamationmark.triangle.fill")
+                            .font(.caption).foregroundStyle(.orange)
+                    }
+                    Toggle(draft.removeSourceFiles
+                           ? "Im Ziel löschen, was in der Quelle fehlt (--delete) – nicht zusammen mit Verschieben"
+                           : "Im Ziel löschen, was in der Quelle fehlt (--delete)",
+                           isOn: $draft.deleteExtraneous)
+                        .disabled(draft.removeSourceFiles)
+                    if draft.effectiveDeleteExtraneous {
                         Label("Vorsicht: Dateien im Ziel, die in der Quelle nicht (mehr) vorhanden sind, werden gelöscht.",
                               systemImage: "exclamationmark.triangle.fill")
                             .font(.caption).foregroundStyle(.orange)
@@ -263,6 +280,8 @@ struct JobEditor: View {
         case .daily:
             let c = Calendar.current.dateComponents([.hour, .minute], from: dailyTime)
             return .daily(hour: c.hour ?? 12, minute: c.minute ?? 0)
+        case .manual:
+            return .manual
         }
     }
 

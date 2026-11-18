@@ -144,9 +144,9 @@ struct JobsTab: View {
                         .labelsHidden()
                         .help("Aktiv")
                         VStack(alignment: .leading) {
-                            Text("\(computer?.displayName ?? "?") \(job.direction.arrow) \(job.folderName)")
+                            Text("\(computer?.displayName ?? "?") \(job.arrow) \(job.folderName)")
                                 .font(.headline)
-                            Text("\(job.localPath)  \(job.direction.arrow)  \(job.remotePath)")
+                            Text("\(job.localPath)  \(job.arrow)  \(job.remotePath)")
                                 .font(.caption).foregroundStyle(.secondary)
                                 .lineLimit(1).truncationMode(.middle)
                         }

@@ -60,6 +60,8 @@ public enum Scheduler {
     public static let retryInterval: TimeInterval = 5 * 60
 
     public static func nextRun(for job: SyncJob, status: JobStatus, calendar: Calendar = .current) -> Date {
+        // Manuelle Ordner laufen nie von selbst, auch nicht als Wiederholung nach einem Fehler.
+        if case .manual = job.schedule { return .distantFuture }
         let regular = job.schedule.nextRun(after: status.lastAttempt, calendar: calendar)
         guard let last = status.lastAttempt,
               let outcome = status.lastOutcome,

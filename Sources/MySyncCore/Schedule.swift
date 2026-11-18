@@ -5,6 +5,8 @@ public enum Schedule: Codable, Hashable, Sendable {
     case everyMinutes(Int)
     case hourly
     case daily(hour: Int, minute: Int)
+    /// Nie automatisch, nur per Klick im Menü.
+    case manual
 
     /// Kurzbeschreibung für Menü und Einstellungen, z. B. „täglich um 12:00 Uhr“.
     public var description: String {
@@ -16,14 +18,19 @@ public enum Schedule: Codable, Hashable, Sendable {
             return "stündlich"
         case .daily(let hour, let minute):
             return String(format: "täglich um %02d:%02d Uhr", hour, minute)
+        case .manual:
+            return "nur manuell"
         }
     }
 
     /// Der nächste Zeitpunkt, zu dem nach `last` synchronisiert werden soll.
     /// Ohne bisherigen Versuch ist der Job sofort fällig.
     public func nextRun(after last: Date?, calendar: Calendar = .current) -> Date {
+        if case .manual = self { return .distantFuture }
         guard let last else { return .distantPast }
         switch self {
+        case .manual:
+            return .distantFuture
         case .everyMinutes(let minutes):
             return last.addingTimeInterval(TimeInterval(max(1, minutes) * 60))
         case .hourly:
@@ -48,7 +55,7 @@ public enum Schedule: Codable, Hashable, Sendable {
 
 /// Bearbeitbare Form eines Intervalls für die Einstellungs-UI.
 public enum ScheduleKind: String, CaseIterable, Identifiable, Sendable {
-    case minutes, hourly, daily
+    case minutes, hourly, daily, manual
     public var id: String { rawValue }
 
     public var label: String {
@@ -56,6 +63,7 @@ public enum ScheduleKind: String, CaseIterable, Identifiable, Sendable {
         case .minutes: return "Alle X Minuten"
         case .hourly: return "Stündlich"
         case .daily: return "Täglich"
+        case .manual: return "Nur manuell"
         }
     }
 }
@@ -66,6 +74,7 @@ public extension Schedule {
         case .everyMinutes: return .minutes
         case .hourly: return .hourly
         case .daily: return .daily
+        case .manual: return .manual
         }
     }
 }
